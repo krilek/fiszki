@@ -67,7 +67,7 @@ class FiszkiController extends Controller{
   * @Route("/add", name="show_add_word")
   */
   public function showAddWord(){
-    return new Response("NEW WORD");
+    return new Response("TESTING");
   }
   /**
   * @Route("/lang/{lang}", name="show_lang")
