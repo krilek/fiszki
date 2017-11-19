@@ -1,3 +1,6 @@
+# fiszki
+Basic symfony site to help learn foreign language words.
+
 Symfony Standard Edition
 ========================
 
