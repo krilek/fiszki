@@ -1,49 +1,30 @@
-{% extends 'base.html.twig' %} {% block stylesheets %} {{ parent() }}
-<style>
-  body {
-    font-family: 'Lato', sans-serif;
-    color: white;
-    font-weight: bold;
-    text-shadow: -1px -1px 0 #000,
-    1px -1px 0 #000,
-    -1px 1px 0 #000,
-    1px 1px 0 #000;
-    background-image: url("{{ asset('/backgrounds/') ~ background.fileName }}");
-    padding-top: 40px;
-  }
-
-  #main .card {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    padding-left: 20px;
-    padding-right: 20px;
-    border-radius: 2px;
-    background-color: rgba(0, 0, 0, 0.4);
-    background: rgba(0, 0, 0, 0.4);
-  }
-</style>
-{% endblock %} {% block navbar %} {% endblock %} {% block body %}
+{% extends 'base.html.twig' %} {% block navbar %} {% endblock %} {% block body %}
 <div class="row">
   <div id="main" class="d-block mx-auto align-items-center">
     <div class="card text-white border-dark">
       <div class="card-body">
         <div class="row">
-          <blockquote class="card-blockquote">
-            <h1>Hi {{ name }}</h1>
-            <p>What do you want to do?</p>
-          </blockquote>
+          <div class="col-lg-12">
+            <h1 class="display-4 text-center">Hi {{ name }}</h1>
+            <p class="text-center">What do you want to do?</p>
+          </div>
         </div>
         <div class="row">
-            <nav class="nav nav-pills nav-justify">
-            <a class="nav-item nav-link" href="#">Learn in polish</a>
-            <a class="nav-item nav-link" href="#">Learn in english</a>
-          </nav>
+          
+          <div class="col-lg-12">
+            <div class="btn-group btn-group-lg d-flex" role="group">
+              <a href="{{ path("show_lang", {"lang": "pl"}) }}" class="btn btn-secondary w-100">Learn in polish</a>
+              <a href="{{ path("show_lang", {"lang": "en"}) }}" class="btn btn-secondary w-100">Learn in english</a>
+            </div>
+          </div>
         </div>
-        <div class="row">
-           <nav class="nav nav-pills nav-justify">
-            <a class="nav-item nav-link" href="#">Insert additional words</a>
-            <a class="nav-item nav-link" href="#">Modify stored words</a>
-          </nav>
+        <div style="margin-top:2px;" class="row">
+        <div class="col-lg-12">
+          <div class="btn-group btn-group-lg d-flex" role="group">
+            <a href="{{ path("show_add_word") }}" class="btn btn-secondary w-100">Insert additional words</a>
+            <a href="" class="btn btn-secondary w-100">Modify stored words</a>
+          </div>
+        </div>
         </div>
       </div>
     </div>
