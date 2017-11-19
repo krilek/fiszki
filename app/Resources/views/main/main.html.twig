@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %} {% block stylesheets %} {{ parent() }}
+<style>
+  body {
+    font-family: 'Lato', sans-serif;
+    color: white;
+    font-weight: bold;
+    text-shadow: -1px -1px 0 #000,
+    1px -1px 0 #000,
+    -1px 1px 0 #000,
+    1px 1px 0 #000;
+    background-image: url("{{ asset('/backgrounds/') ~ background.fileName }}");
+    padding-top: 40px;
+  }
+
+  #main .card {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 2px;
+    background-color: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.4);
+  }
+</style>
+{% endblock %} {% block navbar %} {% endblock %} {% block body %}
+<div class="row">
+  <div id="main" class="d-block mx-auto align-items-center">
+    <div class="card text-white border-dark">
+      <div class="card-body">
+        <div class="row">
+          <blockquote class="card-blockquote">
+            <h1>Hi {{ name }}</h1>
+            <p>What do you want to do?</p>
+          </blockquote>
+        </div>
+        <div class="row">
+            <nav class="nav nav-pills nav-justify">
+            <a class="nav-item nav-link" href="#">Learn in polish</a>
+            <a class="nav-item nav-link" href="#">Learn in english</a>
+          </nav>
+        </div>
+        <div class="row">
+           <nav class="nav nav-pills nav-justify">
+            <a class="nav-item nav-link" href="#">Insert additional words</a>
+            <a class="nav-item nav-link" href="#">Modify stored words</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{ dump() }} {% endblock %}
