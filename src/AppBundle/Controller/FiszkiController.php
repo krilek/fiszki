@@ -12,6 +12,8 @@ class FiszkiController extends Controller{
   /**
   * @Route("/", name="main")
   */
+  
+  //tylko ciuchy przecinek kobiety hajs przecinek sb maffija przecinek remix przecinek
   public function showMain(Request $request){
     $background = new Background();
     $background = $background->getBackground();
