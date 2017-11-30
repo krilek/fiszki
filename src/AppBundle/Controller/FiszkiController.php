@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use AppBundle\Entity\Name;
+use AppBundle\Entity\Word;
 use AppBundle\Entity\Background;
 class FiszkiController extends Controller{
   /**
@@ -73,8 +74,62 @@ class FiszkiController extends Controller{
   /**
   * @Route("/lang/{lang}", name="show_lang")
   */
-  public function showLangChoose($lang){
-    return new Response("Choosed language: ".$lang);
+  public function showLangChoose(Request $request, $lang){
+
+    $background = new Background();
+    $background = $background->getBackground();
+
+    $a = 0;
+    
+    //User Word -uword -> word, that user is writing
+    $uword = new word();
+    $uword->setWord("".$a);
+
+    //Server Word -sword -> word, that is correct
+    //misiek tutaj wrzuc to zapytanie do bazy
+    $sword = new word();
+    $sword->setWord("");
+    
+    $templateFile = "main/word.twig";
+    $parameters = [
+      'word' => $uword,
+      'background' => $background,
+
+    ];
+    /*
+    if(isset($_POST['userWord'])) {
+      $parameters = [
+      'word' => $uword,
+      'background' => $background,
+    ];
+    }
+    else {
+      $uword = $form->getData()->word;
+      $parameters = [
+        'word' => $uword,
+        'background' => $background,
+      ];
+    }
+    */
+
+    $form = $this->createFormBuilder($uword)
+        ->add('word', TextType::class)
+        ->add('', SubmitType::class, array('label' => 'Getting word'))
+        ->getForm();
+
+    
+    $form->hanleRequest($request);
+
+    if($form->isSubmitted())
+    {
+      $uword = $form->getData();
+    }
+
+    return $this->render("main/word.twig", array(
+      'background' => $background,
+      'word' => $uword,
+      'form' => $form->createView(),
+    ));
   }
   public function cookieSet(){
   }
