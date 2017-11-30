@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Entity\Name;
 use AppBundle\Entity\Word;
 use AppBundle\Entity\Background;
@@ -78,16 +79,16 @@ class FiszkiController extends Controller{
 
     $background = new Background();
     $background = $background->getBackground();
-
-    $a = 0;
     
+    $a = 0;
+
     //User Word -uword -> word, that user is writing
-    $uword = new word();
-    $uword->setWord("".$a);
+    $uword = new Word();
+    $uword->setWord("$a");
 
     //Server Word -sword -> word, that is correct
     //misiek tutaj wrzuc to zapytanie do bazy
-    $sword = new word();
+    $sword = new Word();
     $sword->setWord("");
     
     $templateFile = "main/word.twig";
@@ -114,17 +115,17 @@ class FiszkiController extends Controller{
 
     $form = $this->createFormBuilder($uword)
         ->add('word', TextType::class)
-        ->add('', SubmitType::class, array('label' => 'Getting word'))
+        ->add('save', SubmitType::class, array('label' => 'Getting word'))
         ->getForm();
 
     
-    $form->hanleRequest($request);
-
+    $form->handleRequest($request);
+    /*
     if($form->isSubmitted())
     {
       $uword = $form->getData();
     }
-
+    */
     return $this->render("main/word.twig", array(
       'background' => $background,
       'word' => $uword,
