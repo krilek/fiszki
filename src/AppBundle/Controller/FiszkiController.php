@@ -80,57 +80,52 @@ class FiszkiController extends Controller{
     $background = new Background();
     $background = $background->getBackground();
     
-    $a = 0;
 
-    //User Word -uword -> word, that user is writing
-    $uword = new Word();
-    $uword->setWord("$a");
+    //User Word -uWord -> word, that user is writing
+    $uWord = new Word();
+    $uWord->setWord("X");
 
-    //Server Word -sword -> word, that is correct
+    //Server Word -sWord -> word, that is correct
     //misiek tutaj wrzuc to zapytanie do bazy
-    $sword = new Word();
-    $sword->setWord("");
+    $sWord = new Word();
+    $sWord->setWord("cat");
     
     $templateFile = "main/word.twig";
-    $parameters = [
-      'word' => $uword,
-      'background' => $background,
-
-    ];
     /*
     if(isset($_POST['userWord'])) {
       $parameters = [
-      'word' => $uword,
-      'background' => $background,
-    ];
+        'word' => $uWord,
+        'background' => $background,
+      ];
     }
     else {
-      $uword = $form->getData()->word;
+      $uWord = $form->getData()->word;
       $parameters = [
-        'word' => $uword,
+        'word' => $uWord,
         'background' => $background,
       ];
     }
     */
-
-    $form = $this->createFormBuilder($uword)
-        ->add('word', TextType::class)
-        ->add('save', SubmitType::class, array('label' => 'Getting word'))
-        ->getForm();
-
+    
+    $form = $this->createFormBuilder($uWord)
+    ->add('word', TextType::class)
+    ->add('save', SubmitType::class, array('label' => 'Getting word'))
+    ->getForm();
+    
     
     $form->handleRequest($request);
-    /*
-    if($form->isSubmitted())
+    if($form->isSubmitted()  && $form->isValid())
     {
-      $uword = $form->getData();
+      $submitedWord = $form->getData()->word;
+      $uWord->setWord($submitedWord);
     }
-    */
-    return $this->render("main/word.twig", array(
+    $parameters = [
+      'sWord' => $sWord->getWord(),
+      'uWord' => $uWord->getWord(),
       'background' => $background,
-      'word' => $uword,
-      'form' => $form->createView(),
-    ));
+      'form' => $form->createView()
+    ];
+    return $this->render("main/word.twig", $parameters);
   }
   public function cookieSet(){
   }
