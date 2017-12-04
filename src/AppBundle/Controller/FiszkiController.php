@@ -6,16 +6,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use AppBundle\Entity\Name;
+use AppBundle\Entity\Word;
 use AppBundle\Entity\Background;
 class FiszkiController extends Controller{
   /**
   * @Route("/", name="main")
   */
+  
   public function showMain(Request $request){
     $background = new Background();
     $background = $background->getBackground();
-
+	//dobry komentarz
     $name = new Name();
     $form = $this->createFormBuilder($name)
             ->add('name', TextType::class, array(
@@ -72,8 +75,57 @@ class FiszkiController extends Controller{
   /**
   * @Route("/lang/{lang}", name="show_lang")
   */
-  public function showLangChoose($lang){
-    return new Response("Choosed language: ".$lang);
+  public function showLangChoose(Request $request, $lang){
+
+    $background = new Background();
+    $background = $background->getBackground();
+    
+
+    //User Word -uWord -> word, that user is writing
+    $uWord = new Word();
+    $uWord->setWord("X");
+
+    //Server Word -sWord -> word, that is correct
+    //misiek tutaj wrzuc to zapytanie do bazy
+    $sWord = new Word();
+    $sWord->setWord("cat");
+    
+    $templateFile = "main/word.twig";
+    /*
+    if(isset($_POST['userWord'])) {
+      $parameters = [
+        'word' => $uWord,
+        'background' => $background,
+      ];
+    }
+    else {
+      $uWord = $form->getData()->word;
+      $parameters = [
+        'word' => $uWord,
+        'background' => $background,
+      ];
+    }
+    */
+    
+    $form = $this->createFormBuilder($uWord)
+    ->add('word', TextType::class)
+    ->add('save', SubmitType::class, array('label' => 'Getting word'))
+    ->getForm();
+    
+    
+    $form->handleRequest($request);
+    if($form->isSubmitted()  && $form->isValid())
+    {
+      $submitedWord = $form->getData()->word;
+      $uWord->setWord($submitedWord);
+    }
+    $parameters = [
+      'sWord' => $sWord->getWord(),
+      'uWord' => $uWord->getWord(),
+      'background' => $background,
+      'form' => $form->createView()
+    ];
+    return $this->render("main/word.twig", $parameters);
   }
   public function cookieSet(){
   }
