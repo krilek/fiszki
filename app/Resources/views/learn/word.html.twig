@@ -26,13 +26,22 @@ background-clip: padding-box;
     <div class="card text-white border-dark">
         <div class="row">
           <div class="col-lg-12">
-            <h1>How is '{{ sWord }}' in polish? </h1>
+            <h1>How is '{{ sWord }}' in {% if lang == 'pl'%}
+            english
+            {% elseif lang == 'en' %}
+            polish
+          {% endif %}? </h1>
           </div>
         </div>
         <div class="row">
           <div class="col-lg-12">
           {{ form_start(form) }}
-              {{ form_row(form.word) }}
+          {% if form.wordEn is defined %}
+              {{ form_row(form.wordEn) }}
+          {% endif %}
+          {% if form.wordPl is defined %}
+              {{ form_row(form.wordPl) }}
+          {% endif %}
           {{ form_end(form) }}
           </div>
           <h2>{{ goodWords }}</h2>

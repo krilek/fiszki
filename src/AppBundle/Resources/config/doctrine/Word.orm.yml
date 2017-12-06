@@ -1,0 +1,14 @@
+AppBundle\Entity\Word:
+    type: entity
+    table: word
+    id:
+        _id:
+            type: integer
+            generator: { strategy: AUTO }
+    fields:
+        _wordEn:
+            type: string
+            length: 100
+        _wordPl:
+            type: string
+            length: 100
