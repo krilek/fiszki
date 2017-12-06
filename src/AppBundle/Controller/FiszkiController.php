@@ -76,54 +76,59 @@ class FiszkiController extends Controller{
   * @Route("/lang/{lang}", name="show_lang")
   */
   public function showLangChoose(Request $request, $lang){
+    
 
     $background = new Background();
     $background = $background->getBackground();
-    
 
-    //User Word -uWord -> word, that user is writing
-    $uWord = new Word();
-    $uWord->setWord("X");
+    /* program has to get in one round $allSWords questions from the data base, 
+    write to variable $sWords, 
+    then every one that appeared delete from array,
+    and again rand the next one */
 
-    //Server Word -sWord -> word, that is correct
-    //misiek tutaj wrzuc to zapytanie do bazy
-    $sWord = new Word();
-    $sWord->setWord("cat");
+    //all Words from server;
+    $allSWords = 3;
+
+    //question to data base
+    $sWords = ['cat'=>'kot', 'sausage'=>'kielbasa', 'headphones'=>'sluchawki', 'mouse'=>'myszka'];
+
+    $actualSWord = array_rand($sWords,1);
     
+    $_SESSION['goodWords'] = 0;
+
+    $uWord = new Word("");
+
     $templateFile = "main/word.twig";
-    /*
-    if(isset($_POST['userWord'])) {
-      $parameters = [
-        'word' => $uWord,
-        'background' => $background,
-      ];
-    }
-    else {
-      $uWord = $form->getData()->word;
-      $parameters = [
-        'word' => $uWord,
-        'background' => $background,
-      ];
-    }
-    */
     
     $form = $this->createFormBuilder($uWord)
     ->add('word', TextType::class)
     ->add('save', SubmitType::class, array('label' => 'Getting word'))
     ->getForm();
     
+
+    $doSprawdzenia1 = $actualSWord;
+    $doSprawdzenia2 = $sWords[$actualSWord];
     
     $form->handleRequest($request);
     if($form->isSubmitted()  && $form->isValid())
     {
       $submitedWord = $form->getData()->word;
       $uWord->setWord($submitedWord);
+      if($submitedWord == $sWords[$actualSWord])
+      {
+        $_SESSION['goodWords'] += 1;
+        unset($sWords[$actualSWord]);
+      }
+      
     }
     $parameters = [
-      'sWord' => $sWord->getWord(),
+      'sWord' => $actualSWord,
       'uWord' => $uWord->getWord(),
       'background' => $background,
-      'form' => $form->createView()
+      'form' => $form->createView(),
+      'goodWords' => $_SESSION['goodWords'],
+      'HALOSPRAWDZAMZMIENNE1' =>$doSprawdzenia1,
+      'HALOSPRAWDZAMZMIENNE2' =>$doSprawdzenia2
     ];
     return $this->render("main/word.twig", $parameters);
   }
