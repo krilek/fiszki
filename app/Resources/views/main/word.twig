@@ -26,19 +26,16 @@ background-clip: padding-box;
     <div class="card text-white border-dark">
         <div class="row">
           <div class="col-lg-12">
-            <h1>Hey, how about give us some word?</h1>
+            <h1>How is '{{ sWord }}' in polish? </h1>
           </div>
         </div>
         <div class="row">
-          <h1>{{ sWord }}</h1>
           <div class="col-lg-12">
           {{ form_start(form) }}
               {{ form_row(form.word) }}
           {{ form_end(form) }}
-          {{ form_start(form) }}
-              {{ form_row(form.word) }}
-          {{ form_end(form) }}
           </div>
+          <h2>{{ goodWords }}</h2>
         </div>
     </div>
   </div>
