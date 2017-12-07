@@ -82,8 +82,8 @@ class FiszkiController extends Controller
         $background = $background->getBackground();
 
         //Setting up doctrine
-        $em = $this->getDoctrine()->getManager();
-
+        $manager = $this->getDoctrine()->getManager();
+        
         //Creating new object used for db queries and form creation
         $word = new Word();
 
@@ -109,10 +109,10 @@ class FiszkiController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $word = $form->getData();
             //Tell doctrine that I need to store object in db (in future)
-            $em->persist($word);
+            $manager->persist($word);
     
             //Execute queries
-            $em->flush();
+            $manager->flush();
         }
 
 
@@ -125,7 +125,6 @@ class FiszkiController extends Controller
     public function showLangChoose(Request $request, $lang, SessionInterface $session)
     {
         $session->start();
-
 
         //Background randomize
         $background = new Background();
@@ -141,13 +140,14 @@ class FiszkiController extends Controller
 
         // $actualSWord = array_rand($sWords, 1);
     
-        // $_SESSION['goodWords'] = 0;
         //Migrated to symfony session
         $session->set('goodWords', 0);
         //Here I will add some data pulling from db
+        
         //For now dummy classes which you should use maybe
         $word = new Word("english", "angielski");
         $word->id = 1;
+        $session->set("lastWord", $word);
         /*
         DUMMY DATA
         */
@@ -159,6 +159,7 @@ class FiszkiController extends Controller
         $w4->id = 4;
         $w5 = new Word('mouse', 'myszka');
         $w5->id = 5;
+
         /*
             END OF DUMMY DATA
         */
@@ -178,10 +179,20 @@ class FiszkiController extends Controller
         $submitedWord = "";
         if ($form->isSubmitted()  && $form->isValid()) {
             $submitedWord = $form->getData();
+            if ($session->get("lastWord")->getWordPl() == $submitedWord->getWordPl()) {
+                $counter = $session->get('goodWords') + 1;
+                $session->set('goodWords', $counter);
+                if ($session->has("anwseredId")) {
+                    $tmp = $session->get("anwseredId");
+                    $tmp[] = $session->get("lastWord")->getId();
+                    $session->set("anwseredId", $tmp);
+                } else {
+                    $session->set("anwseredId", array($session->get("lastWord")->getId()));
+                }
+            }
             //           \/ - word from form
             // New if ($submitedWord->getWordEn() == $savedWord or id in something){
-                // $counter = $session->get('goodWords') + 1;
-                // $session->set('goodWords', $counter);
+                // $lastWords[] =
             // }
             // if ($submitedWord == $sWords[$actualSWord]) {
             //     $_SESSION['goodWords'] += 1;
@@ -195,7 +206,8 @@ class FiszkiController extends Controller
             'background' => $background,
             'form' => $form->createView(),
             'goodWords' => $session->get('goodWords'),
-            'lang' => $lang
+            'lang' => $lang,
+            'session' => $session
             // 'sWord' => $actualSWord,
             // 'uWord' => $uWord->getWord(),
             // 'HALOSPRAWDZAMZMIENNE1' =>$doSprawdzenia1,
